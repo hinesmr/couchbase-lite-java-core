@@ -1429,8 +1429,12 @@ public class Database implements StoreDelegate {
     @InterfaceAudience.Private
     public long totalDataSize() {
         long size = 0;
+	Log.v(TAG, "Tallying " + path);
         for (File f : new File(path).listFiles())
             size += f.length();
+	Log.v(TAG, "Tallying " + getAttachmentStorePath());
+	for (File f : new File(getAttachmentStorePath()).listFiles())
+	    size += f.length();
         return size;
     }
 

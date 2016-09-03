@@ -105,7 +105,7 @@ public class ChangeTracker implements Runnable {
         this.requestHeaders = new HashMap<String, Object>();
         this.heartBeatSeconds = Replication.DEFAULT_HEARTBEAT;
         this.limit = 50;
-        this.usePOST = true;
+        this.usePOST = false;
     }
 
     public boolean isContinuous() {
