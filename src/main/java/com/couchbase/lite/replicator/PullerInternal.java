@@ -75,8 +75,6 @@ public class PullerInternal extends ReplicationInternal implements ChangeTracker
     public static final int MAX_PENDING_DOCS = 200;
 
     private static final int INSERTION_BATCHER_DELAY = 250; // 0.25 Seconds
-
-    private ChangeTracker changeTracker;
     protected SequenceMap pendingSequences;
     protected Boolean canBulkGet;  // Does the server support _bulk_get requests?
     protected List<RevisionInternal> revsToPull = Collections.synchronizedList(
@@ -167,12 +165,8 @@ public class PullerInternal extends ReplicationInternal implements ChangeTracker
         changeTracker.setAuthenticator(getAuthenticator());
         Log.d(TAG, "%s: started ChangeTracker %s", this, changeTracker);
 
-        if (filterName != null) {
-            changeTracker.setFilterName(filterName);
-            if (filterParams != null) {
-                changeTracker.setFilterParams(filterParams);
-            }
-        }
+	installFilters();
+
         changeTracker.setDocIDs(documentIDs);
         changeTracker.setRequestHeaders(requestHeaders);
         changeTracker.setContinuous(lifecycle == Replication.Lifecycle.CONTINUOUS);

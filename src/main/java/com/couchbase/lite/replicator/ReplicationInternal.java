@@ -85,6 +85,8 @@ abstract class ReplicationInternal implements BlockingQueueListener {
     public static final String SYNC_GATEWAY_PREFIX = "Couchbase Sync Gateway/";
 
     private static int lastSessionID = 0;
+
+    protected ChangeTracker changeTracker;
     public static int RETRY_DELAY_SECONDS = 60; // #define kRetryDelay 60.0 in CBL_Replicator.m
 
     private static ReplicationStateTransition TRANS_RUNNING_TO_IDLE =
@@ -182,6 +184,17 @@ abstract class ReplicationInternal implements BlockingQueueListener {
         initializeReplicationExecutor();
 
         initializeStateMachine();
+    }
+
+    protected void installFilters() {
+	if (filterName != null) {
+            if (changeTracker != null) {
+                changeTracker.setFilterName(filterName);
+                if (filterParams != null) {
+                    changeTracker.setFilterParams(filterParams);
+                }
+	    }
+        }
     }
 
     @Override
@@ -1177,6 +1190,7 @@ abstract class ReplicationInternal implements BlockingQueueListener {
      */
     public void setFilterParams(Map<String, Object> filterParams) {
         this.filterParams = filterParams;
+	installFilters();
     }
 
     /**
